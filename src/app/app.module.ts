@@ -1,16 +1,20 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { ServerComponent } from './server/server.component'; // don't add .ts to imports (added by WebPack, a typescript feature)
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ServerComponent // register your own components
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent] // tells Angular which component to recognize in the index.html at startup
 })
 export class AppModule { }
