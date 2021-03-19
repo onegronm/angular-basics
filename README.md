@@ -25,3 +25,27 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Install a node module locally
+Run `npm install --save bootstrap@3`
+
+## Generate a component
+Run `ng generate component <component-name>` or `ng g c <component-name>`
+
+## Component selectors
+The element selector `<app-server>` is commonly used for components rather than attribute `[app-server]` or class `.app-server` selectors.
+
+## String Interpolation (curly braces)
+```html
+<p>{{ 'Server' }} with ID {{ serverId }} is {{ getServerStatus() }}</p>
+```
+
+## Property Binding (no curly braces)
+```html
+<p [innerText]="!allowNewServer"></p>
+```
+
+## Event Binding
+```html
+<button (click)="onClick()" />
+```
