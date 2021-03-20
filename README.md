@@ -49,3 +49,14 @@ The element selector `<app-server>` is commonly used for components rather than 
 ```html
 <button (click)="onClick()" />
 ```
+
+## Two-Way-Databinding
+```html
+<input 
+ type="text"
+ class="form-control"
+ [(ngModel)]="serverName"
+ >
+ ```
+
+ 

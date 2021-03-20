@@ -1,9 +1,25 @@
+<label>Server Name</label>
+
+<!-- $event gives us information about the event data-->
+<!-- <input 
+ type="text"
+ class="form-control"
+ (input)="onUpdateServerName($event)" >  -->
+
+<!-- Two-way event binding -->
+<input 
+ type="text"
+ class="form-control"
+ [(ngModel)]="serverName"
+ >
+
+<!-- <p> {{ serverName }}</p> -->
 <button class="btn btn-primary"
         [disabled]="!allowNewServer"
         (click)="onCreateServer()">Add Server</button>
 <!-- Property Binding -->
 <!-- <p [innerText]="!allowNewServer"></p> -->
 <p>{{ serverCreationStatus }}</p>
+
 <!-- Components are reusable -->
-<app-server></app-server>
 <app-server></app-server>
