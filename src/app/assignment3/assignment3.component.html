@@ -1,0 +1,4 @@
+<button class="btn btn-primary" (click)="onClick()" >Display Details</button>
+<hr>
+<p *ngIf="clicked">Whatever here</p>
+<p *ngFor="let click of buttonClicks" [innerText]="click" [ngStyle]="{backgroundColor: click >= 5 ? 'blue' : 'transparent', color: click >= 5 ? 'white' : 'black'}"></p>
