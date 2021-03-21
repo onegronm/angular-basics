@@ -1,1 +1,3 @@
-<p>{{ 'Server' }} with ID {{ serverId }} is {{ getServerStatus() }}</p>
+<!-- Attribute directive with property binding (binding to a property of the directive). It allows us to dynamically set the styles -->
+<p [ngStyle]="{backgroundColor: getColor()}"
+   [ngClass]="{online: serverStatus === 'online'}">{{ 'Server' }} with ID {{ serverId }} is {{ getServerStatus() }}</p>

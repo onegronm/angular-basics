@@ -18,9 +18,4 @@ export class UsernameComponent implements OnInit {
   onUsernameChanged(){
     this.isEmpty = this.username.length ? false : true;
   }
-
-  onClick(){
-    this.username = '';
-    this.isEmpty = true;
-  }
 }

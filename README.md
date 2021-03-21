@@ -59,4 +59,32 @@ The element selector `<app-server>` is commonly used for components rather than 
  >
  ```
 
- 
+ ## ngIf structural directive with Else condition
+ ### A directive is an instruction to the DOM
+ ```html
+ <!-- Directives -->
+<p *ngIf="serverCreated; else noServer">Server was created, server name is {{ serverName }}</p>
+<!-- Local reference (#)-->
+<ng-template #noServer>
+        <p>No server was created</p>
+</ng-template>
+```
+
+## ngStyle attribute directive
+```html
+<!-- Attribute directive with property binding (binding to a property of the directive). It allows us to dynamically assign a styles -->
+<p [ngStyle]="{backgroundColor: getColor()}">{{ 'Server' }} with ID {{ serverId }} is {{ getServerStatus() }}</p>
+```
+
+## ngClass directive
+<!-- Dynamically add or remove CSS styles -->
+```html
+<p [ngStyle]="{backgroundColor: getColor()}"
+   [ngClass]="{online: serverStatus === 'online'}">{{ 'Server' }} with ID {{ serverId }} is {{ getServerStatus() }}</p>
+```
+
+## ngFor directive
+```html
+<!-- Components are reusable -->
+<app-server *ngFor="let server of servers"></app-server>
+```

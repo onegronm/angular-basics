@@ -5,7 +5,7 @@
  type="text"
  class="form-control"
  [(ngModel)]="username"
- (input)="onUsernameChanged()" >
+>
 
  <!-- Output the username property via String interpolation (in a paragraph below the input) -->
  <p>{{ username }}</p>
@@ -13,7 +13,7 @@
  <!-- Add a button which may only be clicked if the username is NOT an empty string -->
  <!-- Upon clicking the button, the username should be reset to an empty string -->
  <button class="btn btn-primary"
-  [disabled]="isEmpty"
-  (click)="onClick()"
+  [disabled]="username === ''"
+  (click)="username = ''"
   >Reset</button>
  
