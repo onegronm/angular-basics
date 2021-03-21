@@ -88,3 +88,9 @@ The element selector `<app-server>` is commonly used for components rather than 
 <!-- Components are reusable -->
 <app-server *ngFor="let server of servers"></app-server>
 ```
+
+## ngFor getindex of current iteration
+```html
+<!-- Components are reusable -->
+<app-server *ngFor="let server of servers; let i = index"></app-server>
+```
