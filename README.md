@@ -36,6 +36,7 @@ Run `npm install --save bootstrap@3`
 
 ## Generate a component
 Run `ng generate component <component-name>` or `ng g c <component-name>`
+Run `ng g c <component-name> --skipTests true` to create a component without a test file
 
 ## Component selectors
 The element selector `<app-server>` is commonly used for components rather than attribute `[app-server]` or class `.app-server` selectors.
