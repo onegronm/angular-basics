@@ -107,3 +107,12 @@ export class Ingredient {
     constructor(public name: string, public amount: number){}
 }
 ```
+
+## Assigning an alias to custom properties
+```typescript
+@Input('srvElement') element: { type: string, name: string, content: string }
+```
+### then from the outside bind to this property
+```html
+<app-server-element *ngFor="let serverElement of serverElements" [srvElement]="serverElement"><app-server-element>
+```
