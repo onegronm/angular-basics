@@ -100,3 +100,10 @@ The element selector `<app-server>` is commonly used for components rather than 
 <!-- Components are reusable -->
 <app-server *ngFor="let server of servers; let i = index"></app-server>
 ```
+
+## Constructor short hand. Generates public properties behind the scenes.
+```typescript
+export class Ingredient {
+    constructor(public name: string, public amount: number){}
+}
+```
