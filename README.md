@@ -130,3 +130,6 @@ onServerAdded(serverData: {serverName: string, serverContent: string}){
   // ...
 }
 ```
+
+## View encapsulation
+Only the component receives the styles you defined for it rather than being applied globally. This is possible because Angular assigns unique attributes to HTML elements on the component.
