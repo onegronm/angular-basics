@@ -108,11 +108,25 @@ export class Ingredient {
 }
 ```
 
-## Assigning an alias to custom properties
+## Binding to custom properties (passing data down from one component to another)
 ```typescript
 @Input('srvElement') element: { type: string, name: string, content: string }
 ```
-### then from the outside bind to this property
+### then from the outside component, bind to this property
 ```html
 <app-server-element *ngFor="let serverElement of serverElements" [srvElement]="serverElement"><app-server-element>
+```
+
+## Binding to custom events (passing data up from one component to another)
+```typescript
+@Ouput() serverCreated = new EventEmitter<{serverName: string, serverContent: string}>();
+```
+### then from outside component, bind to this event. The selector will listen to an event called 'serverCreated' and then execute the 'onServerAdded' function
+```html
+<app-cockpit (serverCreated)="onServerAdded($event)"></app-cockpit>
+```
+```typescript
+onServerAdded(serverData: {serverName: string, serverContent: string}){
+  // ...
+}
 ```
