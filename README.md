@@ -176,3 +176,9 @@ From the server element component template, add the ng-content directive. This s
 - ngAfterViewChecked - called every time the view (and child views) has been checked
 - ngOnDestroy - called once the component is about to be destroyed
 
+## Getting access to ng-content with @ContentChild
+```typescript
+@ContentChild('local-reference-id') paragraph : ElementRef
+console.log(this.paragraph.NativeElement.textContent);
+```
+
