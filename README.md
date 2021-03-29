@@ -144,3 +144,35 @@ onAddServer(nameInput: HTMLInputElement){
   this.serverName = nameInput.value;
 }
 ```
+
+## Getting access to the template & DOM with @ViewChild()
+```typescript
+@ViewChild('local-reference-id') serverContentInput : ElementRef
+```
+Not recommended for accessing elements in the DOM to print something on the page. Use property and two-way binding.
+
+## Projecting content into components with ng-content
+By default, Angular ignores the content placed between the opening and closing tags of your own components. By using the ng-content directive, Angular will project this content into a component. Useful for complex HTML you want to pass into a component from outside. For example, building reusable widgets, like a tab widget, where each widget will content coming from another source. For complex HTML code, property binding is not the best solution.
+
+From the app component
+```html
+<app-server-element>
+  <p>Hello world!</p>
+</app-server-element>
+```
+
+From the server element component template, add the ng-content directive. This serves as a hook to mark the place for Angular where it should add any content it finds between the opening and closing tag in the app component.
+```html
+<ng-content></ng-content>
+```
+
+## Lifecycle
+ngOnChanges - called after a bound input property changes. Before ngOnInit.
+ngOnInit - called once the component is initialized. After the constructor.
+ngDoCheck - called during every change detection run. This includes any event, even if the DOM is not changed, such as a button click. Useful if you want to do something on every change detection cycle (inform Angular of some change it would not know otherwise).
+ngAfterContentInit - called after content (ng-content) has been projected into view.
+ngAfterContentChecked - called every time the projected content has been checked
+ngAfterViewInit - called after the component's view (and child views) has been initialized
+ngAfterViewChecked - called every time the view (and child views) has been checked
+ngOnDestroy - called once the component is about to be destroyed
+
