@@ -167,12 +167,12 @@ From the server element component template, add the ng-content directive. This s
 ```
 
 ## Lifecycle
-ngOnChanges - called after a bound input property changes. Before ngOnInit.
-ngOnInit - called once the component is initialized. After the constructor.
-ngDoCheck - called during every change detection run. This includes any event, even if the DOM is not changed, such as a button click. Useful if you want to do something on every change detection cycle (inform Angular of some change it would not know otherwise).
-ngAfterContentInit - called after content (ng-content) has been projected into view.
-ngAfterContentChecked - called every time the projected content has been checked
-ngAfterViewInit - called after the component's view (and child views) has been initialized
-ngAfterViewChecked - called every time the view (and child views) has been checked
-ngOnDestroy - called once the component is about to be destroyed
+- ngOnChanges - called after a bound input property changes. Before ngOnInit.
+- ngOnInit - called once the component is initialized. After the constructor.
+- ngDoCheck - called during every change detection run. This includes any event, even if the DOM is not changed, such as a button click. Useful if you want to do something on every change detection cycle (inform Angular of some change it would not know otherwise).
+- ngAfterContentInit - called after content (ng-content) has been projected into view.
+- ngAfterContentChecked - called every time the projected content has been checked
+- ngAfterViewInit - called after the component's view (and child views) has been initialized
+- ngAfterViewChecked - called every time the view (and child views) has been checked
+- ngOnDestroy - called once the component is about to be destroyed
 
