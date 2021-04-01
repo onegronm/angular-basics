@@ -108,7 +108,7 @@ export class Ingredient {
 }
 ```
 
-## Binding to custom properties (passing data down from one component to another)
+## Binding to custom properties (getting data from outside)
 ```typescript
 @Input('srvElement') element: { type: string, name: string, content: string }
 ```
