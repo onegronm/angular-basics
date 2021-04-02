@@ -252,3 +252,70 @@ export class BetterHighlightDirective implements OnInit {
 }
 // * register in *Declarations* array in app component
 ```
+
+## Using HostBinding to Bind to Host Properties
+### Alternative to using the renderer
+```typescript
+@Directive({
+ selector: '[appBetterHighlight]' 
+})
+export class BetterHighlightDirective implements OnInit {
+  // on the element this directive exists, access the style property and backgroundColor sub-property, and set to whatever backgroundColor is set to here
+  @HostBinding('style.backgroundColor') backgroundColor: string = 'transparent';
+
+  // listening to events on the element
+  @HostListener('mouseenter') mouseover(eventData: Event){
+    // this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+    this.backgroundColor = 'blue';
+  }
+  
+  @HostListener('mouseenter') mouseleave(eventData: Event){
+    // this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'transparent');
+    this.backgroundColor = 'transparent';
+  }
+  
+  constructor(private elRef: elementRef, private renderer: Renderer2){
+    
+  }
+  
+  // ngOnInit lifecycle hook
+  ngOnInit(){
+  }
+}
+// * register in *Declarations* array in app component
+```
+
+## Binding to directive properties
+```typescript
+@Directive({
+ selector: '[appBetterHighlight]' 
+})
+export class BetterHighlightDirective implements OnInit {
+  @Input() defaultColor: string = 'transparent';
+  @Input() highlightColor: string = 'blue';
+  
+  // on the element this directive exists, access the style property and backgroundColor sub-property, and set to whatever backgroundColor is set to here
+  @HostBinding('style.backgroundColor') backgroundColor: string;
+
+  // listening to events on the element
+  @HostListener('mouseenter') mouseover(eventData: Event){
+    // this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+    this.backgroundColor = this.highlightColor;
+  }
+  
+  @HostListener('mouseenter') mouseleave(eventData: Event){
+    // this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'transparent');
+    this.backgroundColor = this.defaultColor;
+  }
+  
+  constructor(private elRef: elementRef, private renderer: Renderer2){    
+  }
+  
+  // ngOnInit lifecycle hook
+  ngOnInit(){
+    this.backgroundColor = this.defaultColor;
+  }
+}
+// * register in *Declarations* array in app component
+```
+
