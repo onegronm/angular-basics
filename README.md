@@ -65,8 +65,8 @@ The element selector `<app-server>` is commonly used for components rather than 
  >
  ```
 
- ## ngIf structural directive with Else condition
- ### A directive is an instruction to the DOM
+## ngIf structural directive with Else condition
+### A directive is an instruction to the DOM
  ```html
  <!-- Directives -->
 <p *ngIf="serverCreated; else noServer">Server was created, server name is {{ serverName }}</p>
@@ -182,3 +182,73 @@ From the server element component template, add the ng-content directive. This s
 console.log(this.paragraph.NativeElement.textContent);
 ```
 
+## Structural directives
+- *ngIf
+- *ngFor
+
+## Attribute directives
+- ngClass
+- ngStyle
+### Creating your own attribute directive
+```typescript
+// run ng g d basic-highlight
+@Directive({
+ selector: '[appBasicHighlight]' 
+})
+export class BasicHighlightDirective implements OnInit {
+  constructor(private elementRef: ElementRef){
+    
+  }
+  
+  // ngOnInit lifecycle hook
+  ngOnInit(){
+    this.elementRef.NativeElement.style.backgroundColor = 'green'
+  }
+}
+// * register in *Declarations* array in app component
+```
+### A better attribute directive using the renderer object
+```typescript
+@Directive({
+ selector: '[appBetterHighlight]' 
+})
+export class BetterHighlightDirective implements OnInit {
+  constructor(private elRef: elementRef, private renderer: Renderer2){
+    
+  }
+  
+  // ngOnInit lifecycle hook
+  ngOnInit(){
+    // helper methods available to alter the DOM
+    this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+  }
+}
+// * register in *Declarations* array in app component
+```
+
+## Using HostListener to Listen to Host Events
+### Reacting to events the directive sits on
+```typescript
+@Directive({
+ selector: '[appBetterHighlight]' 
+})
+export class BetterHighlightDirective implements OnInit {
+  // listening to events on the element
+  @HostListener('mouseenter') mouseover(eventData: Event){
+    this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+  }
+  
+  @HostListener('mouseenter') mouseleave(eventData: Event){
+    this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'transparent');
+  }
+  
+  constructor(private elRef: elementRef, private renderer: Renderer2){
+    
+  }
+  
+  // ngOnInit lifecycle hook
+  ngOnInit(){
+  }
+}
+// * register in *Declarations* array in app component
+```
