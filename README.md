@@ -319,3 +319,41 @@ export class BetterHighlightDirective implements OnInit {
 // * register in *Declarations* array in app component
 ```
 
+## Building a structural directive
+```typescript
+export class UnlessDirective {
+ @Input() set appUnless(condition: boolean) {
+   // setter method of the unless property
+   if(!condition){
+     this.vcRef.createEmbeddedView(this.templateRef); // creates a view in this view container. The view is the templateRef
+   }
+   else {
+     this.vcRef.clear(); // remove from this place in the DOM
+   }
+   
+ }
+ 
+ // templateRef: a reference to the template
+ // vcRef: where to render the templateRef
+ constructor(private templateRef TemplateRef<any>, private vcRef: ViewContainerRef) {
+   
+ }
+}
+```
+
+```html
+<div *appUnless="onlyOdd">
+  ...
+</div>
+```
+
+## ngSwitch
+### Useful if you find yourself creating many ngIf conditions. ngSwitch might be a better solution in such cases.
+```html
+<div [ngSwitch]="value">
+  <p *ngSwitchCase="5">Value is 5</p>
+  <p *ngSwitchCase="10">Value is 10</p>
+  <p *ngSwitchCase="100">Value is 100</p>
+  <p *ngSwitchDefault>Value is default</p>
+</div>
+```
