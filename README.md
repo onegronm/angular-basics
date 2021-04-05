@@ -1,4 +1,4 @@
-# MyFirstAngularApp
+# Angular 10 Basics
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.5.
 
@@ -357,3 +357,42 @@ export class UnlessDirective {
   <p *ngSwitchDefault>Value is default</p>
 </div>
 ```
+
+## Services & Dependency Injection
+### Motivation
+- Passing information between components with Event Binding can be complex even on a simple application.
+- Centralize the business unit and avoid code duplication.
+- Store and manage data.
+- Angular uses constructor injection to provide the services required by the component.
+- Angular uses hierarchical injection. That is, the same instance provided is passed down to child components. 
+  - AppModule: same instance of service is available application-wide
+  - AppComponent: same instance of service is available for all components (but not other services)
+  - Any other component: only available for the Component and all its child components
+  - Addint to providers section will override instances from higher level components. If not desired, remove from providers array but leave the parameter in the constructor.
+
+```typescript
+@Component({
+  selector: 'app-recipe-item',
+  templateUrl: './recipe-item.component.html',
+  styleUrls: ['./recipe-item.component.css'],
+  providers: [LoggingService]
+})
+export class RecipeItemComponent implements OnInit {
+  
+  constructor(private loggingService: LoggingService) { }
+
+  onSelected(){
+    this.loggingService.log('say something');
+  }
+}
+```
+
+### Injecting services into services
+```typescript @Injectible()``` decorator marks a class as available to be provided and injected as a dependency.
+
+If you're using Angular 6+, Instead of adding a service class to the providers[]  array in AppModule , you can set the following config in @Injectable():
+```typescript
+@Injectable({providedIn: 'root'})
+export class MyService { ... }
+```
+This approach allows services to be loaded lazily by Angular (behind the scenes) and redundant code can be removed automatically. This can lead to a better performance and loading speed - though this really only kicks in for bigger services and apps in general.
