@@ -396,3 +396,73 @@ If you're using Angular 6+, Instead of adding a service class to the providers[]
 export class MyService { ... }
 ```
 This approach allows services to be loaded lazily by Angular (behind the scenes) and redundant code can be removed automatically. This can lead to a better performance and loading speed - though this really only kicks in for bigger services and apps in general.
+
+## Routing
+
+### Setting up and loading routes
+```typescript
+// AppModule.ts
+const appRoutes: Routes = [
+ { path: 'users', component: UsersComponent }
+ { path: 'servers', component: ServersComponent }
+];
+
+@NgModule({
+...
+imports: [
+ // forRoot() allows us to register routes for our main application
+ RouterModule.forRoot(appRoutes)
+]
+```
+From the app component, include the 'router-outlet' directive. It marks the place in our document where we want the angular router to load the component of the currently selected route.
+```html
+<router-outlet></router-outlet>
+  ```
+  
+### Navigating with router links
+```html
+<a routerLink="/servers">Servers</a>
+<!-- absolute path -->
+<a [routerLink]=['/users']>Users</a>
+<!-- relative path -->
+<a [routerLink]=['admin']>Users</a>
+```
+Relative path (no forward slash) appends the path in the routerLink directive to the current path.
+
+### Styling active router links
+The routerLinkActiveOptions property adds the classes only when the URL matches the link exactly.
+```html
+<li routerLinkActive="myActiveClassName" [routerLinkActiveOptions]="{exact: true}">
+  <a routerLink="/">Home</a>
+</li>
+<li routerLinkActive="myActiveClassName">
+  <a routerLink="/servers">Servers</a>
+</li>
+```
+
+### Navigating programmatically
+```html
+<button (click)="onLoadServers()">Load Servers</button>
+```
+```typescript
+export class HomeComponent implements OnInit {
+ constructor(private router: Router) { }
+ 
+ onLoadServers() {
+  // complex calculation
+  this.router.navigate(['/servers']);
+ }
+ ```
+ 
+ ### Using relative paths in programmatic navigation
+ Use the relativeTo property to tell Angular relative to what it should load the path.
+ You can inject the active route in the constructor.
+ ```typescript
+ constructor(private router: Router, private route: ActivatedRoute) { }
+ 
+ onReload() {
+  this.router.navigate(['servers'], { relativeTo: this.route });
+ }
+ ```
+ 
+ 
