@@ -470,4 +470,76 @@ export class HomeComponent implements OnInit {
  }
  ```
  
+ ### Passing parameters to routes
+```typescript
+const appRoutes: Routes = [
+ { path: 'users/:id/:name', component: UsersComponent }
+];
+```
+
+### Fetching route parameters
+params is an observable An observable is a way to subscribe to some event in the future then execute some code when it happens without having to wait for it now.
+Angular cleans up the subscription whenever the component is destroyed (unless you create a custom observable). For custom observables, unsubscribe in the OnDestroy() hook method.
+```typescript
+constructor(route: ActivedRoute) {
+}
+
+ngOnInit() {
+ this.route.params.subscribe(
+  (params: Params) => { 
+    this.user.id = params['id'];
+    this.user.name = params['name'] }
+ );
+}
+```
+
+### Passing query parameters
+```[queryParams]``` is a bindable properby of the ```[routerLink]``` directive.
+```html
+<a [routerLink]=['/servers', 5, 'edit'] [queryParams]="{ allowEdit: '1' }" />
+```
+Programmatically:
+```typescript
+onServerLoad() {
+ this.router.navigate(['/servers', id, 'edit'], { queryParams: { allowEdit: '1' }, fragment: 'loading' });
+}
+```
+
+### Retrieving query parameters
+```typescript
+constructor(private route: ActivatedRoute) { }
+
+ngOnInit() {
+ this.route.queryParams.subscribe();
+}
+```
+
+### Another query parameters example
+```typescript
+const appRoutes: Routes = [
+ { path: 'servers/:id', component: ServerComponent }
+]
+```
+```html
+<a [routerLink]="['/servers', server.id]" [queryParams]="{allowEdit: '1'}" />
+```
+Then from the component:
+```typescript
+constructor(private route: ActivatedRoute) { }
+
+ngOnInit() {
+ const id = +this.route.snapshot.params['id'];
+ this.server = <your-service>.getServerById(id);
+ this.route.params.subscribe({ 
+  (params: Param) => { this.server = <your-service>.getServerById(+params['id']); }
+ });
+}
+```
+
+
+
+
+
+
+ 
  
