@@ -536,7 +536,34 @@ ngOnInit() {
 }
 ```
 
+## Observables
+Observable = various data sources (user input events, http requests, triggered in code, ...). Constructs in which you subscribe to be informed of changes in data. Observable is an abstraction of an asynchronous stream of data.
+Observer = your code. The subscribe function.
 
+### Building a custom observable
+```typescript
+private firstObsSubscription: Subscription;
+
+const customIntervalObservable = Observable.create(observer => {
+ let count = 0;
+ setInterval(() => { 
+   observer.next(count); 
+   if(count === 2) {
+     observer.complete(); // observer comes to a halt. Not called on error.
+   }
+   if(count > 3) {
+     observer.error(new Error('Count is greater than 3!')); // Cancels the observer. No more values are emitted.
+   }
+   count++; // or .error(), .complete() }, 1000 );
+});
+
+this.firstObsSubscription = customIntervalObservable.subscribe(data => { 
+  console.log(data); 
+}
+, error => console.log(error);
+, () => { console.log('Completed!'); }
+);
+```
 
 
 
