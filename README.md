@@ -565,8 +565,29 @@ this.firstObsSubscription = customIntervalObservable.subscribe(data => {
 );
 ```
 
+### Understanding operators
+- You use pipe() to chain operators. Operators allow you to build a chain of steps you want to funnel your observable data through, that can be really helpufl for transforming data, filtering out data, etc.
+- map(): Takes an anonymous argument as a function. It transforms the data returned by the pipe() not by the customIntervalObservable. Map applies a projection to each value and emits that projection in the output Observable.
+- filter(): takes values from the source Observable, passes them through a predicate function and only emits those values that yielded true.
+```typescript
+this.customIntervalObservable.pipe(
+  filter(data => {
+    return data > 0;
+  }),
+  map((data: number) => { // data is the data currently emitted by the observable
+    return 'Round' + (data + 1); // transform data and return it.
+})).subscribe(data => { 
+  console.log(data); 
+}
+, error => console.log(error);
+, () => { console.log('Completed!'); }
+);
+```
 
-
-
+### Subjects
+A better approach over event emitters for passing data between components. A special kind of observable. Can actively call "next()" on the subject from the outside. Can be used as an event emitter when communicating accross components with services. If we don't have a passive event source (http request, DOM) but something that actively needs to be triggered by us in the application. Unsubscribe whenever you don't need them (OnDestroy()).
+```typescript
+activatedEmitter = new Subject<boolean>();
+```
  
  
