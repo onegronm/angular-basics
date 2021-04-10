@@ -536,6 +536,35 @@ ngOnInit() {
 }
 ```
 
+### Nested routes
+```typescript
+const appRoutes: Routes = [
+  { path: 'Users', component: UsersComponent, children: [
+      { path: 'Edit/:id', component: EditUserComponent }
+    ]
+  }
+]
+```
+In the parent component, add a hook to all child routes.
+```html
+<div>
+  <router-outlet></router-outlet>
+</div>
+```
+
+### Using query parameters - practice
+```typescript
+onEdit() {
+  this.router.navigate(['edit'], { relativeTo: this.route });
+}
+```
+```html
+<a [routerLink="['/servers', server.id]" [queryParams]="{allowEdit: server.id === 3 ? '1' : '0'}" fragment="loading" />
+```
+```typescript
+this.route.queryParams.subscribe((queryParams: Params) => { this.allowEdit = queryParams['allowEdit'] === '1' ? true : false });
+```
+
 ## Observables
 Observable = various data sources (user input events, http requests, triggered in code, ...). Constructs in which you subscribe to be informed of changes in data. Observable is an abstraction of an asynchronous stream of data.
 Observer = your code. The subscribe function.
