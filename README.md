@@ -555,7 +555,7 @@ In the parent component, add a hook to all child routes.
 ### Using query parameters - practice
 ```typescript
 onEdit() {
-  this.router.navigate(['edit'], { relativeTo: this.route });
+  this.router.navigate(['edit'], { relativeTo: this.route, queryParamsHandling: 'preserve' });
 }
 ```
 ```html
@@ -563,6 +563,15 @@ onEdit() {
 ```
 ```typescript
 this.route.queryParams.subscribe((queryParams: Params) => { this.allowEdit = queryParams['allowEdit'] === '1' ? true : false });
+```
+### Wildcard routes
+Routes are processed from top to bottom so include wildcard route last.
+```typescript
+const appRoutes: Routes = [
+  ...
+  { path: 'not-found', component: PageNotFoundComponent },
+  { path: '**', redirectTo: '/not-found' }
+]
 ```
 
 ## Observables
