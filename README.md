@@ -564,6 +564,7 @@ onEdit() {
 ```typescript
 this.route.queryParams.subscribe((queryParams: Params) => { this.allowEdit = queryParams['allowEdit'] === '1' ? true : false });
 ```
+
 ### Wildcard routes
 Routes are processed from top to bottom so include wildcard route last.
 ```typescript
@@ -572,6 +573,73 @@ const appRoutes: Routes = [
   { path: 'not-found', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/not-found' }
 ]
+```
+
+### Outsourcing the route configuration
+If you have more than 3 routes, defines the routes in a separate file rather than app.module. Typically, this is called app-routing.module.ts.
+```typescript
+const appRoutes: Routes = [
+  ...
+  ...
+  ...
+  { path: 'not-found', component: PageNotFoundComponent },
+  { path: '**', redirectTo: '/not-found' }
+]
+
+@NgModule({
+  imports: [
+    RouterModule.forRoot(appRoutes)
+  ],
+  exports:
+    // tells Angular, "for this module, if I were to add this module to the imports of another module, what should be accessible to this module that imports this module?
+    [RouterModule]
+})
+```
+Finally, import this module in the 'imports' section of the app module.
+
+### Guards
+Logic executed before a route is loaded or once you are about to leave a route. Let's say you want to limit access to a route unless the user is logged in. Add a file called 'auth-guard.service.ts'.
+```typescript
+@Injectable
+export class AuthGuard implements CanActivate  {
+  constructor(private authService: AuthService, private router: Router);
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    return this.authService.isAuthenticated()
+      .then(
+        (authenticated: boolean) => {
+          if(authenticated) {
+            return true;
+          } else {
+            // redirect 
+            router.navigate(['/'])
+          }
+        }
+      );
+  }
+}
+```
+Use the guard in the route configuration module
+```typescript
+{ path: 'servers', canActivate: [AuthGuard], component: ServersComponent }
+// register the AuthGuard in the 'providers' section of your app module
+```
+
+### Protect nested routes with canActivateChild
+```typescript
+@Injectable
+export class AuthGuard implements CanActivate, CanActivateChild  {
+  constructor(private authService: AuthService, private router: Router);
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    ...
+  }
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    return this.canActivate(route, state);
+  }
+}
+```
+Use the guard in the route configuration module
+```typescript
+{ path: 'servers', canActivateChild: [AuthGuard], component: ServersComponent }
 ```
 
 ## Observables
