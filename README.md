@@ -642,6 +642,91 @@ Use the guard in the route configuration module
 { path: 'servers', canActivateChild: [AuthGuard], component: ServersComponent }
 ```
 
+### Controlling navigation with canDeactivate
+Useful if you need to alert the user if they are navigating away from the page without saving their changes, for example.
+
+The can-deactivate-guard.service.ts
+```typescript
+export interface CanComponentDeactivate {
+  canDeactivate () => Observable<boolean> | Promise<boolean> | boolean;
+}
+
+export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
+  canDeactivate(component: CanComponentDeactivate, 
+    currentRoute: ActivatedRouteSnapshot,
+    currentState: RouterStateSnapshot, 
+    nextState?: routerStateSnapshot) : Observable<boolean> | Promise<boolean> | boolean {
+      return component.canDeactivate();
+    }
+}
+```
+From the app-routing-module, point to guard. Now Angular will load this guard everytime we try to leave this path.
+```typescript
+{ path: 'servers', canActivate: [AuthGuard], component: ServersComponent, canDeactivate: [CanDeactivateGuard] }
+```
+From the component, implement the interface
+```typescript
+export class EditServerComponent implements OnInit, CanComponentDeactivate {
+
+  canDeactivate() : Observable<boolean> | Promise<boolean> | boolean {
+    if (!this.changesSaved) {
+      return confirm('Do you want to discard the changes?');
+    }
+    else 
+      return true;
+  }
+}
+```
+
+### Passing static data to a route
+Use the data property to pass an object with key-value pairs
+```typescript
+{ path: 'not-found', component: ErrorPageComponent, data: {message: 'Page not found!'} }
+```
+From the ErrorPageComponent
+```typescript
+constructor(private route:ActivatedRoute) {
+}
+
+ngOnInit() {
+  // subscribe if this could change while you are still on the page, use the route and the data observable subscribed.
+  this.errorMessage = this.route.data.subscribe((data: Data) => this.errorMessage = data['message']);
+  // if this doesn't change, just access from the snapshot
+  // this.errorMessage = this.route.snapshot.data['message'];
+}
+```
+
+### Resolving dynamic data with the resolve guard
+The resolve guard runs some logic before accessing the route. It does not decide whether to load the component, it just executes preloading logic. Useful if we want to load our data in advanced. Alternatively, could do this from the component's ngOnInit() method. Especially important when using asynchronous data.
+```typescript
+interface Server {
+  id: number,
+  name: string,
+  status: string
+  
+}
+
+@Injectable()
+export class ServerResolver implements Resolve<Server> {
+  resolve(route: ActivatedRoute, stateSnapshot: RouterStateSnapshot): Observable<Server> | Promise<Server> | Server  {
+    // can either return data instantly or asynchronously 
+    return this.myService.getServer(+route.params['id']);
+  }
+}
+```
+Map the resolver to the route
+```typescript
+{ path: 'servers', component: ServersComponent, canActivateChild: [CanDeactivateGuard], children: [
+  { path: 'id', component: ServersComponent, resolve: {serverPreLoaded: ServerResolver}
+] }
+```
+Use the resolve in the component
+```typescript
+ngOnInit() {
+  this.route.data.subscribe((data: Data) => this.server = data['serverPreLoaded'])
+}
+```
+
 ## Observables
 Observable = various data sources (user input events, http requests, triggered in code, ...). Constructs in which you subscribe to be informed of changes in data. Observable is an abstraction of an asynchronous stream of data.
 Observer = your code. The subscribe function.
