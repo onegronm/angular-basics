@@ -781,4 +781,84 @@ A better approach over event emitters for passing data between components. A spe
 activatedEmitter = new Subject<boolean>();
 ```
  
+ ## Forms
+ 
+- Template-Driven approach: Angular infers the Form object from the DOM.
+- Reactive approach: Form is created programmatically and synchronized with the DOM.
+
+### Registering the controls with Angular (template approach)
+```html
+<input type="text" ngModel name="username">
+```
+
+### Submitting and using the form
+Add "#f" to create a local reference on the form control. This allows passing the form element as an event argument.
+```html
+<form (ngSubmit)="onSubmit(f)" #f>
+```
+```typescript
+onSubmit(form: ElementRef) {
+  console.log(form);
+}
+```
+
+Give access to form JSON object created by Angular.
+```html
+<form (ngSubmit)="onSubmit(f)" #f="ngForm">
+```
+```typescript
+onSubmit(form: ngForm) {
+  console.log(form);
+}
+```
+
+### Accessing the form with @ViewChild
+Useful if you need to access the form earlier than the point of form submission.
+```typescript
+@ViewChild('f') signupForm: ngForm;
+
+onSubmit() {
+  console.log(signupForm)
+}
+```
+
+### Adding validation
+You can use default HTML attributes which link to built in directives that ship with Angular. "Email" is not a valid HTML attribute but a directive in Angular. The directives will change the ngForm "valid" property to false if the validation is not successful.
+- Angular dynamically adds Css classes that indicate the state of the form (ng-dirty, ng-touched, etc.).
+```html
+<input name="username" required email>
+```
+- Which Validators do ship with Angular? Check out here: https://angular.io/api/forms/Validators - these are all built-in validators.
+- For the template-driven approach, you need the directives. You can find out their names, by searching for "validator" in the official docs: https://angular.io/api?type=directive
+
+### Using the form state
+```html
+<form (ngSubmit)="onSubmit(f)" #f="ngForm">
+  <button type="submit" [disabled]="!f.valid">
+</form>
+```
+You can customize the styling of invalid states with CSS classes. Take advantage of form state handled by Angular.
+```css
+input.ng-invalid.ng-touched, select.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+```
+
+### Outputting validation error messages
+```html
+<input name="username" required email #email="ngModel">
+<span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email!</span>
+```
+
+### Set default values with NgModel property binding
+```typescript
+this.defaultQuestion = 'pet';
+```
+```html
+<select name="secret" [ngModel]="defaultQuestion">
+  <option value="pet">Your first pet?</option>
+```
+
+
+
  
