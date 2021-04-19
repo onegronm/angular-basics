@@ -783,15 +783,15 @@ activatedEmitter = new Subject<boolean>();
  
  ## Forms
  
-- Template-Driven approach: Angular infers the Form object from the DOM.
+- Template-Driven approach: Angular infers the Form object from the DOM. (TD)
 - Reactive approach: Form is created programmatically and synchronized with the DOM.
 
-### Registering the controls with Angular (template approach)
+### TD: registering the controls with Angular (template-driven approach)
 ```html
 <input type="text" ngModel name="username">
 ```
 
-### Submitting and using the form
+### TD: submitting and using the form
 Add "#f" to create a local reference on the form control. This allows passing the form element as an event argument.
 ```html
 <form (ngSubmit)="onSubmit(f)" #f>
@@ -812,7 +812,7 @@ onSubmit(form: ngForm) {
 }
 ```
 
-### Accessing the form with @ViewChild
+### TD: accessing the form with @ViewChild
 Useful if you need to access the form earlier than the point of form submission.
 ```typescript
 @ViewChild('f') signupForm: ngForm;
@@ -822,7 +822,7 @@ onSubmit() {
 }
 ```
 
-### Adding validation
+### TD: adding validation
 You can use default HTML attributes which link to built in directives that ship with Angular. "Email" is not a valid HTML attribute but a directive in Angular. The directives will change the ngForm "valid" property to false if the validation is not successful.
 - Angular dynamically adds Css classes that indicate the state of the form (ng-dirty, ng-touched, etc.).
 ```html
@@ -831,7 +831,7 @@ You can use default HTML attributes which link to built in directives that ship 
 - Which Validators do ship with Angular? Check out here: https://angular.io/api/forms/Validators - these are all built-in validators.
 - For the template-driven approach, you need the directives. You can find out their names, by searching for "validator" in the official docs: https://angular.io/api?type=directive
 
-### Using the form state
+### TD: using the form state
 ```html
 <form (ngSubmit)="onSubmit(f)" #f="ngForm">
   <button type="submit" [disabled]="!f.valid">
@@ -844,13 +844,13 @@ input.ng-invalid.ng-touched, select.ng-invalid.ng-touched {
 }
 ```
 
-### Outputting validation error messages
+### TD: outputting validation error messages
 ```html
 <input name="username" required email #email="ngModel">
 <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email!</span>
 ```
 
-### Set default values with NgModel property binding
+### TD: set default values with NgModel property binding
 ```typescript
 this.defaultQuestion = 'pet';
 ```
@@ -859,6 +859,86 @@ this.defaultQuestion = 'pet';
   <option value="pet">Your first pet?</option>
 ```
 
+### TD: using ngModel with two-way binding
+Use ngModel to get access to whatever the user has entered. Instantly output or do whatever you want to do.
+```typescript
+answer = '';
+```
+```html
+<textarea name="questionAnswer" rows="3" [(ngModel)]="answer"></textarea>
+<p>Your reply is {{ answer }}</p>
+```
 
+### TD: grouping form controls
+Add structure to ngForm value Object. This will create an extra field in the value Object. It will also create a new object under the 'controls' property.
+```html
+<div id="user-data" ngModelGroup="userData">
+  <div>...
+```
 
+### TD: handling radio buttons
+```typescript
+genders = ['male','female'];
+```
+```html
+<div class="radio" *ngFor="let gender of genders">
+  <label>
+    <input type="radio" name="gender" ngModel value="gender" required>
+    {{ gender }}
+  </label>
+</div>
+```
+
+### TD: setting and patching form values
+You can set values for all controls using one convenient command called setValue(). You pass an exact copy of the form value as a JavaScript object.
+```typescript
+@ViewChild('f') signupForm: ngForm;
+suggestUserName() {
+  const suggestedName = "superUser";
+  
+  // set value of entire form
+  this.signupForm.setValue({
+    userData: {
+      username: suggestedName,
+      email = ''
+    },
+    secret = 'pet',
+    gender = 'male',
+    questionAndAnswer = ''
+  });
+  
+  // a better approach. Only override certain parts of the form
+  this.signupForm.form.patchValue({
+    userData: {
+      username: suggestedName;
+    }
+  });
+}
+```
+
+### TD: using form data
+```typescript
+user = {
+  username: '',
+  email: ''
+}
+
+onSubmit() {
+  this.submitted = true;
+  this.user.username = this.signupForm.value.username; // the properties on the signup form match their 'name' property
+  this.user.email = this.signupForm.value.email;
+}
+```
+```html
+<div class="row" *ngIf="submitted">
+  <p>Username: {{ user.username }}</p>
+  <p>Mail: {{ user.email }}</p>
+</div>
+```
+
+### TD: resetting forms
+If you want you can pass the same object as in setValue() to reset() which will then reset to specific values.
+```typescript
+this.signupForm.reset();
+```
  
