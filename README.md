@@ -942,3 +942,26 @@ If you want you can pass the same object as in setValue() to reset() which will 
 this.signupForm.reset();
 ```
  
+### Reactive: setup
+Import ReactiveFormsModule in app.module.ts. Contains tools for building form programmatically.
+
+### Reactive: creating a form
+```typescript
+signupForm: FormGroup;
+
+ngOnInit() {
+  this.signupForm = new FormGroup({
+    'username': new FormControl(null),
+    'email': new FormControl(null),
+    'gender': new FormControl('male')
+  });
+}
+```
+
+### Reactive: syncing HTML and form
+```html
+<form [formGroup]="signupForm">
+  <input type="text" formControlName="username">
+  <input type="text" formControlName="email">
+```
+
