@@ -965,3 +965,144 @@ ngOnInit() {
   <input type="text" formControlName="email">
 ```
 
+### Reactive: submitting the form
+```html
+<form (ngSubmit)="onSubmit()">
+```
+```typescript
+signupForm: FormGroup;
+
+onSubmit() {
+  this.consolelog(this.signupForm);
+}
+```
+
+### Reactive: adding validation
+```typescript
+ngOnInit() {
+  this.signupForm = new FormGroup({
+    'username': new FormControl(null, Validators.required),
+    'email': new FormControl(null, [Validators.required, Validators.email]),
+    'gender': new FormControl('male')
+  });
+}
+```
+
+### Reactive: getting access to controls
+```html
+<span *ngIf="!signupForm.get('username').valid && signupForm.get('username').touched" />
+```
+
+### Reactive: grouping controls
+```typescript
+ this.signupForm = new FormGroup({
+    'userData': new FormGroup({    
+      'username': new FormControl(null, Validators.required),
+      'email': new FormControl(null, [Validators.required, Validators.email])
+    }),
+    'gender': new FormControl('male')
+  });
+```
+```html
+<form [formGroup]="signupForm">
+  <div formGroupName="userData">
+    <input type="text" formControlName="username">
+    <input type="text" formControlName="email">
+```
+
+### Reactive: arrays of form controls
+Dynamically add a control.
+```html
+<button type="button" (click)="onAddHobby()">Add control</button>
+```
+```typescript
+this.signupForm = ({
+  'hobbies' = new FormArray([])
+})
+
+onAddHobby() {
+  const control = new FormControl(null, Validators.required);
+  (<FormArray>this.signupForm.get('hobbies')).push(control);
+}
+
+getControls() {
+  return (<FormArray>this.signupForm.get('hobbies')).controls;
+}
+```
+Synchronize form with dynamically created input.
+```html
+<div formArrayName="hobbies">
+  <div class="form-group" *ngFor="let hobbyControl of getControls(); let i = index">
+    <input type="text" [formControlName=]"i" />
+   </div>
+</div>
+```
+
+### Reactive: creating custom validators
+```typescript
+forbiddenUsernames = ['Chris','Anna'];
+
+forbiddenNames(control: FormControl): {[s: string], boolean} {
+  if (this.forbiddenUsernames.indexOf(control.value) !== -1) {
+    return {'nameIsForbidden': true}
+  }
+  return null; // tells Angular the form control is valid
+}
+
+this.signupForm = ({
+  'username': new FormControl(null, [Validators.required, this.forbiddenNames.bind(this)])
+})
+```
+
+### Reactive: using error codes
+```html
+<span *ngIf="signupForm.get('userData.username').errors['required']">
+```
+
+### Reactive: creating custom async validator
+When you need to reach the server to make validation. Wait for a response before returning true/false/
+```typescript
+forbiddenEmails(control: FormControl): Promise<any> | Observable<any> {
+  const promise = new Promise<any>((resolve, reject) => {
+    if (control.value == 'test@test.com') resolve({ 'emailIsForbidden': true});
+    else resolve(null);
+  });
+}
+
+this.signupForm = new FormGroup({
+      'email': new FormControl(null, [Validators.required, Validators.email], this.forbiddenEmails)
+```
+
+### Reactive: reacting to status or value changes
+Hook observables you can subscribe to to closely watch what happens on your form or individual control and want to react to that.
+```typescript
+this.signupForm.valueChanges.subscribe(
+  (value) => console.log(value);
+);
+this.signupForm.statusChanges.subscribe(
+  (status) => console.log(status);
+);
+```
+
+### Reactive: setting and patching values
+```typescript
+// update the entire form
+this.signupForm.setValue({
+  'userData': {
+    'username': 'Max',
+    'email': 'max@test.com',
+    'gender': 'male'
+  }
+});
+
+// only update a part of the form
+this.signupForm.patchValue({
+  'userData': {
+    'username': 'Anna'
+  }
+});
+```
+    
+              
+
+
