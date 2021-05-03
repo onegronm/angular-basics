@@ -68,7 +68,7 @@
     + [Understanding operators](#understanding-operators)
     + [Subjects](#subjects)
   * [Forms](#forms)
-    + [TD: registering the controls with Angular (template-driven approach)](#td-registering-the-controls-with-angular-template-driven-approach-)
+    + [TD: registering the controls with Angular (template-driven approach)](#td-registering-the-controls-with-angular-template-driven-approach)
     + [TD: submitting and using the form](#td-submitting-and-using-the-form)
     + [TD: accessing the form with @ViewChild](#td-accessing-the-form-with-viewchild)
     + [TD: adding validation](#td-adding-validation)
