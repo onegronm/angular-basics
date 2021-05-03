@@ -55,7 +55,7 @@
     + [Retrieving query parameters](#retrieving-query-parameters)
     + [Another query parameters example](#another-query-parameters-example)
     + [Nested routes](#nested-routes)
-    + [Using query parameters - practice](#using-query-parameters-practice)
+    + [Using query parameters - practice](#using-query-parameters---practice)
     + [Wildcard routes](#wildcard-routes)
     + [Outsourcing the route configuration](#outsourcing-the-route-configuration)
     + [Guards](#guards)
