@@ -1135,6 +1135,67 @@ Synchronize form with dynamically created input.
    </div>
 </div>
 ```
+Another example adding an array of ingredients to a recipe.
+```typescript
+  getControls() {
+      return (<FormArray>this.recipeForm.get('ingredients')).controls;
+  }
+
+  private initForm() {
+    let recipeName = '';
+    let recipeImagePath = '';
+    let recipeDescription = '';
+    let recipeIngredients = new FormArray([]);
+
+    if(this.editMode){      
+      const recipe = this.recipeService.getRecipe(this.id);
+      recipeName = recipe.name;
+      recipeImagePath = recipe.imagePath;
+      recipeDescription = recipe.description;
+      if(recipe['ingredients']){
+        for (let ingredient of recipe.ingredients) {
+          recipeIngredients.push(new FormGroup({
+            'name': new FormControl(ingredient.name),
+            'amount': new FormControl(ingredient.amount)
+          }))
+        }
+      }
+    }
+
+    this.recipeForm = new FormGroup({
+      'name': new FormControl(recipeName),
+      'imagePath': new FormControl(recipeImagePath),
+      'description': new FormControl(recipeDescription),
+      'ingredients': recipeIngredients
+    });
+  }
+```
+Then synchronizing the form.
+```html
+<div class="row">
+  <div class="col-xs-12" formArrayName="ingredients">
+      <div class="row" 
+          *ngFor="let ingredientControl of getControls(); let i = index"
+          [formGroupName]="i">
+          <div class="col-xs-8">
+              <input
+                  type="text"
+                  class="form-control"
+                  formControlName="name" />
+          </div>
+          <div class="col-xs-2">
+              <input
+                  type="number"
+                  class="form-control"
+                  formControlName="amount" />
+          </div>
+          <div class="col-xs-2">
+              <button class="btn btn-danger">X</button>
+          </div>
+      </div>
+  </div>
+</div>
+```
 
 ### Reactive: creating custom validators
 ```typescript
