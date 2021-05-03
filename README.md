@@ -1259,7 +1259,7 @@ forbiddenNames(control: FormControl): {[s: string], boolean} {
 }
 
 this.signupForm = ({
-  'username': new FormControl(null, [Validators.required, this.forbiddenNames.bind(this)])
+  'username': new FormControl(null, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/), this.forbiddenNames.bind(this)])
 })
 ```
 
