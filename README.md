@@ -1382,7 +1382,7 @@ export class ShortenPipe implements PipeTransform {
 ```html
 <input type="text" [(ngModel)]="filteredStatus">
 ```
-Generate pipe boilerplate code with ng g p command
+Generate pipe boilerplate code with the ```ng g p``` command
 ```bash
 ng g p <pipe_name>
 ```
@@ -1409,15 +1409,3 @@ export class ShortenPipe implements PipeTransform {
 <li *ngFor="let server of servers | filter: filteredStatus: 'status'"></li>
 ```
 Angular does not rerun the pipe whenever the data changes. There's a high performance cost. There's no built-in filter pipe in Angular. This behavior can be enforced by including the "pure: false" property on the pipe's @Pipe decorator.
-
-
-
-
-
-
-
-
-
-              
-
-
