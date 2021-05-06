@@ -26,7 +26,7 @@
     + [Binding to custom events (passing data up from one component to another)](#binding-to-custom-events-passing-data-up-from-one-component-to-another)
   * [View encapsulation](#view-encapsulation)
     + [Local reference](#local-reference)
-    + [Getting access to the template & DOM with @ViewChild()](#getting-access-to-the-template-dom-with--viewchild)
+    + [Getting access to the template & DOM with @ViewChild()](#getting-access-to-the-template-dom-with-viewchild)
     + [Projecting content into components with ng-content](#projecting-content-into-components-with-ng-content)
   * [Lifecycle](#lifecycle)
   * [Getting access to ng-content with @ContentChild](#getting-access-to-ng-content-with-contentchild)
@@ -1311,7 +1311,113 @@ this.signupForm.patchValue({
   }
 });
 ```
+
+## Pipes
+A feature in Angular 2 that allows transforming output in a template.
+
+### Using pipes
+```html
+<p>{{ server.instancetype | uppercasse }}</p>
+<p>{{ server.started | date }}</p>
+```
+
+### Parameterizing pipes
+```html
+<p>{{ server.started | date:'fullDate' }}</p>
+```
+
+### Built-in pipes
+https://angular.io/api?query=pipe
+
+### Chaining multiple pipes
+```html
+<p>{{ server.started | date:'fullDate' | uppercase }}</p>
+```
+
+### Creating a custom pipe
+```typescript
+@Pipe({
+  name: 'shorten'
+})
+export class ShortenPipe implements PipeTransform {
+  transform(value: any) {
+    if(value.length > 10)
+      return value.substr(0, 10) + ' ...';
+    return value;
+  }
+}
+```
+Add custom pipes to declarations
+```typescript
+@NgModule({
+  declarations: [
+    AppComponent,
+    ShortenPipe
+  ],
+  imports: ...
+})
+```
+```html
+<p>{{ server.name | shorten }}</p>
+```
+
+### Parameterizing custom pipes
+```typescript
+@Pipe({
+  name: 'shorten'
+})
+export class ShortenPipe implements PipeTransform {
+  transform(value: any, limite: number, anotherArg: any) {
+    if(value.length > limit)
+      return value.substr(0, limit) + ' ...';
+    return value;
+  }
+}
+```
+```html
+<p>{{ server.name | shorten:5:someOtherArgument }}</p>
+```
+
+### Creating a filter pipe
+```html
+<input type="text" [(ngModel)]="filteredStatus">
+```
+Generate pipe boilerplate code with ng g p command
+```bash
+ng g p <pipe_name>
+```
+```typescript
+@Pipe({
+  name: 'filter'
+})
+export class ShortenPipe implements PipeTransform {
+  transform(value: any, filterString: string, propName: string) {
+    if(value.length === 0 || filterString === '')
+      return value;
     
+    const resultArray = [];
+    for (const item of value) {
+      if(item[propName] === filterString) {
+        resultArray.push(item);
+      }
+    }
+    return resultArray;
+  }
+}
+```
+```html
+<li *ngFor="let server of servers | filter: filteredStatus: 'status'"></li>
+```
+Angular does not rerun the pipe whenever the data changes. There's a high performance cost. There's no built-in filter pipe in Angular. This behavior can be enforced by including the "pure: false" property on the pipe's @Pipe decorator.
+
+
+
+
+
+
+
+
+
               
 
 
