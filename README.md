@@ -1409,3 +1409,83 @@ export class ShortenPipe implements PipeTransform {
 <li *ngFor="let server of servers | filter: filteredStatus: 'status'"></li>
 ```
 Angular does not rerun the pipe whenever the data changes. There's a high performance cost. There's no built-in filter pipe in Angular. This behavior can be enforced by including the "pure: false" property on the pipe's @Pipe decorator.
+
+## Making Http Requests
+
+### How does Angular interact with backends?
+Database credentials are not stored in the database. Instead, Angular communicatest with the database through Http requests. The API has the code to store and fetch data from the database.
+
+### Anatomy of a Http request
+URL (API endpoint) + Http verb (POST, GET, PUT, ...) + Headers (metadata) + Body
+
+### Sending a POST request
+Import the HttpClientModule. An observable wraps the Http request. You must subscribe to it.
+```typescript
+onCreatePost(postData: { title: string, content: string }) {
+  this.http.post('https://.../posts/add', postData)
+    .subscribe(responseData => {
+      console.log(responseData);
+  }); // Angular automatically transforms post data to JSON
+}
+```
+
+### Getting the data
+```typescript
+ngOnInit() {
+  this.fetchPosts();
+}
+
+private fetchPosts() {
+  this.http.get('https://...')
+    .subscribe(posts => {
+      console.log(posts);
+    });
+}
+```
+
+### Using RxJS operators to transform data
+Using observable operators allows us to write cleaner code. Pipe() allows us to funnel the response data through multiple operators before they reach the subscribe method. The map() operator allows us to get some data and return new data re-wrapped into an observable so we can resubscribe to it.
+```typescript
+private fetchPosts() {
+  this.http.get('https://...')
+    .pipe(map(responseData => {
+        // return an array of posts
+        const postsArray = [];
+        for(const key in responseData) {
+          if(responseData.hasOwnProperty(key)){ // verify you are not accessing the key of some prototype
+            postsArray.push({...responseData[key], id: key }); // the spread operator "..." pulls out the key-value pairs of the nested object we are accessing
+          }          
+        }
+        return postsArray;
+      })     
+    )
+    .subscribe(posts => {
+      console.log(posts);
+    });
+}
+```
+
+### Using types with HttpClient
+You can indicate the type on the generic Http verb methods
+```typescript
+private fetchPosts() {
+  this.http.get<{ [key: string]: Post }>('https://...')
+    .pipe(map(responseData => {
+        // return an array of posts
+        const postsArray: Post[] = [];
+        for(const key in responseData) {
+          ...
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
