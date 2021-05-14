@@ -1478,6 +1478,82 @@ private fetchPosts() {
 }
 ```
 
+### Outputting the response
+```html
+<p *ngIf="loadedPosts.length < 1">No posts available!</p>
+<ul *ngIf="loadedPOsts.lengt >= 1">
+  <li *ngFor="let post of loadedPosts">
+    <h3>{{ post.Title }}</h3>
+    <p>{{ post.Content }}</h3>
+</ul>
+```
+
+### Adding a loading indicator
+Make sure the "No posts available" isn't render until after the posts are loaded.
+```html
+<p *ngIf="loadedPosts.length < 1 && !isFetching">No posts available!</p>
+<ul *ngIf="loadedPOsts.lengt >= 1">
+  <li *ngFor="let post of loadedPosts">
+    <h3>{{ post.Title }}</h3>
+    <p>{{ post.Content }}</h3>
+</ul>
+<p *ngIf="isFetching">Loading...</p>
+```
+```typescript
+this.isFetching = false;
+
+private fetchPosts(){
+  this.isFetching = true;
+  ...
+  .subscribe(posts => { 
+    this.isFetching = false;
+    this.loadedPosts = posts;
+  }
+}
+```
+
+### Using a service for Http requests
+Move handling of the results to the component. The heavy lifting is moved to the service layer.
+
+From the component
+```typescript
+onCreatePost(postData: Post) {
+  this.postService.createAndStorePost(postData.title, postData.content) {
+}
+
+onFetchPosts() {
+  this.isFetching = true;
+  this.postService.fetchPosts.subscribe(posts => {
+    this.isFetching = false;
+    this.loadedPosts = posts;
+  });
+}
+```
+
+From the service
+```typescript
+export class PostsService {
+  constructor(private http: HttpClient) {}
+  
+  createAndStorePost(_title:string, _content:string) {
+    const postData: Post = { title: _title, content: _content };
+    this.http
+      .post<{ name: string }>(
+        'posts/create',
+        postData
+      )
+      .subscribe(responseData => {
+        console.log(responseData)
+      });
+  }
+}
+```
+
+
+
+
+
+
 
 
 
