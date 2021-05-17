@@ -1587,6 +1587,59 @@ onFetchPosts() {
 }
 ```
 
+### Using subjects for error handling
+Use a subject if there are multiple areas in the application interested in the error. From the posts service
+```typescript
+error = new Subject<string>();
+
+createAndStorePost(_title:string, _content:string) {
+  const postData: Post = { title: _title, content: _content };
+  this.http
+    .post<{ name: string }>(
+      'posts/create',
+      postData
+    )
+    .subscribe(responseData => {
+      console.log(responseData)
+    }, error => {
+      this.error.next(error.message);
+    });
+}
+```
+Subscribe to the subject wherever that error message is relevant
+```typescript
+private errorSub: Subscription;
+
+ngOnInit() {
+  this.erroSub = this.postService.error.subscribe(errorMessage => {
+    this.error = errorMessage;
+  });
+}
+
+ngOnDestroy() {
+  this.errorSub.unsubscribe();
+}
+```
+
+### Using the catchError operator
+Use catchError for non-UI related, generic handling error task. throwError RxJS object yields an observable by wrapping an error.
+```typescript
+private fetchPosts() {
+  this.http.get<{ [key: string]: Post }>('https://...')
+    .pipe(map(responseData => {
+        // return an array of posts
+        const postsArray: Post[] = [];
+        for(const key in responseData) {
+          ...
+    }),
+    catchError(errRes => {
+      // send to analytics server. Non-UI related, generic handling error task
+      // then pass on the error
+      return throwError(errRes);
+    });
+}
+```
+
 
 
 
