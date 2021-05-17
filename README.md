@@ -1549,6 +1549,43 @@ export class PostsService {
 }
 ```
 
+### Sending a DELETE request
+From the service
+```typescript
+deletePosts() {
+  this.http.delete('https://posts/delete);
+}
+```
+From the component, subscribe
+```typescript
+onClearPosts() {
+  this.postService.deletePosts().subscribe(() => {
+    this.loadedPosts = [];
+  });
+}
+```
+
+### Handling errors
+From the component, create an 'error' variable and assign a value in the subscribe error handling function.
+```typescript
+error = null;
+```
+```html
+<p *ngIf="isFetching">Loading...</p>
+<div class="alert alert-danger">
+  <h3>An error has ocurred</h3>
+  <p>Error</p>
+</div>
+```
+```typescript
+onFetchPosts() {
+  this.postsService.fetchPosts().subscribe(() => {
+    ...
+  }, error => {
+    this.error = error.message;
+  });
+}
+```
 
 
 
