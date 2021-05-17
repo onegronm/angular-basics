@@ -1640,6 +1640,40 @@ private fetchPosts() {
 }
 ```
 
+### Setting headers
+Any Http method has an object to configure the request using key-value notation.
+```typescript
+onFetchPosts() {
+  return this.http.get<{ [key: string] : Post }>({
+    headers: new HttpHeaders({ "Custom-Header": "Hello" })
+  });
+}
+```
+
+### Adding query parameters
+```typescript
+onFetchPosts() {
+  return this.http.get<{ [key: string] : Post }>({
+    headers: new HttpHeaders({ "Custom-Header": "Hello" }),
+    params: new HttpParams().set('print', 'pretty')
+  });
+}
+```
+Alternatively, you can also append to the HttpParams object like this
+```typescript
+let searchParams = new HttpParams();
+searchParams = searchParams.append('print','pretty');
+
+onFetchPosts() {
+  return this.http.get<{ [key: string] : Post }>({
+    headers: new HttpHeaders({ "Custom-Header": "Hello" }),
+    params: searchParams
+  });
+}
+```
+
+### Observing different types of responses
+
 
 
 
