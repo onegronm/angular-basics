@@ -1673,7 +1673,53 @@ onFetchPosts() {
 ```
 
 ### Observing different types of responses
+Have granular control of your request status
+```typescript
+this.http
+    .post<{ name: string }>(
+      'posts/create',
+      postData,
+      {
+        observe: 'response' // or 'body', 'events'
+      }
+    )
+```
+Observing the 'events' response
+```typescript
+this.http.delete('url...', { observe: 'events' } )
+  .pipe(
+    .tap(event => {
+      console.log(event);
+      if (event.type === HttpEventType.Sent) {
+        // do something in the UI notifying the user the request was sent
+      }
+      if (event.type === HttpEventType.Response)
+      {
+        console.log(event.Body);
+      }
+    });
+```
 
+### Changing the response body type
+```typescript
+this.http.delete('url...', { 
+    observe: 'events',
+    responseType: 'json' // or 'text', 'blob'
+  })
+```
+
+### Interceptor
+Runs code right before response is forwarded to subscribe or before request leaves your app. 'Next' allows request to continue its journey
+``typescript
+import { HttpInterceptor } from '@angular/common/http';
+
+export class AuthInterceptorService implements HttpInterceptor {
+  intercept(req: HttpRequest<any, next: HttpHandler) {
+    console.log('request on the way');
+    return next.handle(req);
+  }
+}
+```
 
 
 
