@@ -1710,7 +1710,8 @@ this.http.delete('url...', {
 
 ### Interceptor
 Runs code right before response is forwarded to subscribe or before request leaves your app. 'Next' allows request to continue its journey
-``typescript
+
+```typescript
 import { HttpInterceptor } from '@angular/common/http';
 
 export class AuthInterceptorService implements HttpInterceptor {
