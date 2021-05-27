@@ -1722,8 +1722,58 @@ export class AuthInterceptorService implements HttpInterceptor {
 }
 ```
 
+### Manipulating request objects
+```typescript
+import { HttpInterceptor } from '@angular/common/http';
 
+export class AuthInterceptorService implements HttpInterceptor {
+  intercept(req: HttpRequest<any, next: HttpHandler) {
+    console.log('request on the way');
+    const modifiedRequest = req.clone({ req.headers.append('Auth', 'xyz') })
+    return next.handle(modifiedRequest);
+  }
+}
+```
 
+### Response interceptors
+The handle method is wrapped by an observable.
+```typescript
+import { HttpInterceptor } from '@angular/common/http';
+
+export class AuthInterceptorService implements HttpInterceptor {
+  intercept(req: HttpRequest<any, next: HttpHandler) {
+    console.log('request on the way');
+    const modifiedRequest = req.clone({ req.headers.append('Auth', 'xyz') })
+    return next.handle(modifiedRequest).pipe(tap(event => { 
+        console.log(event)
+        if (event.type === HttpEventType.Response) {
+          console.log("Response arrived. Body: ");
+          console.log(event.body);
+        }
+      }));
+  }
+}
+```
+
+### Multiple interceptors
+Let's say you have another interceptor for logging. Interceptors will be executed in the order they are provided in app.module.ts.
+```typescript
+@NgModule ({
+  ...
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoggingInterceptorService,
+      multi: true
+    }
+  ]
+  ...
+```
 
 
 
