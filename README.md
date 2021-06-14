@@ -1806,6 +1806,28 @@ signUp(){
 }
 ```
 
+### Error handling with RxJS
+```typescript
+signUp(){
+  return this.http.post<AuthResponseData>('url', {
+    email: "user@domain.com",
+    password: "letmein"
+  })
+  .pipe(catchError(this.handleError));
+}
+
+private handleError(errorRes: HttpErrorResponse){
+  let errorMessage = "An error has occurred!";
+    if (!errorRes.error || !errorRes.error.error){
+      return throwError(errorMessage);
+    }
+    switch (errorRes.error.error.message) {
+      case 'EMAIL_EXISTS':
+        errorMessage = 'This email already exists';
+    }
+    return throwError(errorMessage);
+}
+```
 
 
 
